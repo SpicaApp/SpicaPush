@@ -7,6 +7,8 @@ const axios = require("axios").default;
 module.exports = async (req, res) => {
     const { content, image, url, parent } = req.body;
 
+    
+
     axios.post("https://micro.alles.cx/api/posts/", {
         content: content,
         image: image,
@@ -35,6 +37,7 @@ module.exports = async (req, res) => {
             return res.status(err.response.status).json(err.response.data);
         }
         else {
+            console.log(err);
             return res.status(500).json({ err: "internalError" });
         }
     })
