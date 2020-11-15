@@ -1,21 +1,19 @@
 require("dotenv").config();
 const express = require("express");
-const db = require("./db");
 const app = express();
+const db = require("./db");
 
 app.use(require("body-parser").json({limit: '50mb'}));
-app.use((err, req, res, next) => {
-	console.log(err);
+app.use((err, req, res, next) =>
 	res.status(500).json({ err: "internalError" })
-}
 );
 app.listen(process.env.PORT || 8080, () => console.log("Spica Push Server started and active."));
 
 app.get("/", (req, res) => {
 	res.send({
         name: "Spica Push server",
-        description: "stay cool, stay in school and smoke crack",
-        version: "who cares?"        
+        repo: "https://github.com/SpicaApp/SpicaPush",
+        version: "ĀÃÂÆàÆäÀåæAäâĀæÂÁÂÆÁ"        
 	});
 });
 
