@@ -7,8 +7,6 @@ const axios = require("axios").default;
 module.exports = async (req, res) => {
     const { content, image, url, parent } = req.body;
 
-    
-
     axios.post("https://micro.alles.cx/api/posts/", {
         content: content,
         image: image,
@@ -33,11 +31,10 @@ module.exports = async (req, res) => {
         await sendNotification(`${authors.post.author.nickname ?? authors.post.author.name} replied to you`, `${authors.post.content}`, {type: "post", id: authors.post.id}, authors.authors, "reply");
         return res.status(200).json(authors.post);
     }).catch((err) => {
-        if (err.response) {
+        if (err.response && err.response.data.hasOwnProperty('err')) {
             return res.status(err.response.status).json(err.response.data);
         }
         else {
-            console.log(err);
             return res.status(500).json({ err: "internalError" });
         }
     })
