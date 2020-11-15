@@ -4,8 +4,10 @@ const app = express();
 const db = require("./db");
 
 app.use(require("body-parser").json({limit: '50mb'}));
-app.use((err, req, res, next) =>
+app.use((err, req, res, next) => {
+	console.log(err);
 	res.status(500).json({ err: "internalError" })
+}
 );
 app.listen(process.env.PORT || 8080, () => console.log("Spica Push Server started and active."));
 
