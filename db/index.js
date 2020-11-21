@@ -18,6 +18,7 @@ const db = new Sequelize(
 module.exports = db;
 
 require("./Device")(db);
+require("./UserPushSubscription")(db);
 require("./User")(db);
 
 db.sync();

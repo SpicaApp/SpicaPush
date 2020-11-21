@@ -15,7 +15,7 @@ var apnOptions = {
 apnProvider = new apn.Provider(apnOptions);
 
 module.exports = async (title, message, payload, uids, type) => {
-    if (typeof title !== "string" || typeof message !== "string" || !Array.isArray(uids) || (type !== "reply" && type !== "mention")) return { err: "badRequest" };
+    if (typeof title !== "string" || typeof message !== "string" || !Array.isArray(uids) || (type !== "reply" && type !== "mention" && type !== "subscription")) return { err: "badRequest" };
 
     const results = [];
 
@@ -30,8 +30,10 @@ module.exports = async (title, message, payload, uids, type) => {
         });
 
         if (user && user.notificationsEnabled) {
-            if ((type === "reply" && user.repliesEnabled) || (type === "mention" && user.mentionsEnabled)) {
+            if ((type === "reply" && user.repliesEnabled) || (type === "mention" && user.mentionsEnabled) || type == "subscription") {
                 const deviceIds = user.devices.map(device => device.pushtoken);
+
+                console.log(deviceIds);
 
                 const notification = new apn.Notification({
                     badge: 1,

@@ -31,5 +31,7 @@ module.exports = (db) => {
 		}
     );
     db.User.hasMany(db.Device);
-    db.Device.belongsTo(db.User);
+	db.Device.belongsTo(db.User);
+	db.User.hasMany(db.UserPushSubscription);
+	db.UserPushSubscription.belongsTo(db.User);
 };

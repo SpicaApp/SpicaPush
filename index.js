@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require("express");
+const add = require("./api/subscribe/add");
 const app = express();
 const db = require("./db");
 
@@ -26,6 +27,9 @@ app.get("/user", require("./api/user"));
 app.post("/user/update", require("./api/user/update"));
 app.post("/user/revokeall", require("./api/user/revokeAllDevices"));
 app.delete("/user/delete", require("./api/user/delete"));
+app.get("/subscriptions", require("./api/subscribe"));
+app.post("/subscriptions", require("./api/subscribe/add"));
+app.delete("/subscriptions", require("./api/subscribe/remove"));
 
 // 404
 app.use((req, res) => {

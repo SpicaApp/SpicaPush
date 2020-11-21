@@ -2,6 +2,7 @@ const sendNotification = require("../../utils/sendNotification");
 const auth = require("../../utils/auth");
 const getParentAuthors = require("../../utils/getParentAuthors");
 const getMentionedUsers = require("../../utils/getMentionedUsers");
+const getSubscribedUsers = require("../../utils/getSubscribedUsers");
 const axios = require("axios").default;
 
 module.exports = async (req, res) => {
@@ -19,16 +20,23 @@ module.exports = async (req, res) => {
     }).then( async (response) => {
         const authors = await getParentAuthors(response.data.id); // Authors of parents
         const mentionedPeople = await getMentionedUsers(authors.post.content, authors.post.author.id); // Mentioned people
+        const subscribedPeople = (parent === null ? [] : await getSubscribedUsers(authors.post.author.id));
 
         for (var i = 0; i < mentionedPeople.length; i++) { // Remove mentioned people from authors (so they don't get a notification twice - they only get one for mentions then)
-            const idIndex = authors.authors.indexOf(mentionedPeople[i]);
-            if (idIndex > -1) {
-                authors.authors.splice(idIndex, 1);
+            const idIndexAuthors = authors.authors.indexOf(mentionedPeople[i]);
+            if (idIndexAuthors > -1) {
+                authors.authors.splice(idIndexAuthors, 1);
+            }
+
+            const idIndexSubscribed = subscribedPeople.indexOf(mentionedPeople[i]);
+            if (idIndexSubscribed > -1) {
+                subscribedPeople.splice(idIndexSubscribed, 1);
             }
         }
 
         await sendNotification(`${authors.post.author.nickname ?? authors.post.author.name} mentioned you`, `${authors.post.content}`, {type: "post", id: authors.post.id}, mentionedPeople, "mention");
         await sendNotification(`${authors.post.author.nickname ?? authors.post.author.name} replied to you`, `${authors.post.content}`, {type: "post", id: authors.post.id}, authors.authors, "reply");
+        await sendNotification(`${authors.post.author.nickname ?? authors.post.author.name} just posted`, `${authors.post.content}`, {type: "post", id: authors.post.id}, subscribedPeople, "subscription");
         return res.status(200).json(authors.post);
     }).catch((err) => {
         if (err.response && err.response.data.hasOwnProperty('err')) {
