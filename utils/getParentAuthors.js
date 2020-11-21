@@ -6,14 +6,29 @@ module.exports = async (postId) => {
     const authors = [];
 
     while (hightestParent !== null) {
-        const parentResponse = await axios.get(`https://micro.alles.cx/api/posts/${hightestParent}`);
-        if (hightestParent === postId) {
-            newPost = parentResponse.data
+        try {
+            const parentResponse = await axios.get(`https://micro.alles.cx/api/posts/${hightestParent}`);
+            if (hightestParent === postId) {
+                newPost = parentResponse.data
+            }
+            else {
+                authors.push(parentResponse.data.author.id);
+            }
+            hightestParent = parentResponse.data.parent;
         }
-        else {
-            authors.push(parentResponse.data.author.id);
+        catch(err) {
+            if (err.response) {
+                // Request made and server responded
+                if (err.response.data.err === "missingResource") {
+                    hightestParent = null;
+                }
+                else {
+                    throw err;
+                }
+              } else {
+                throw err;
+              }
         }
-        hightestParent = parentResponse.data.parent;
     }
 
     const filteredAuthors = [... new Set(authors)];
