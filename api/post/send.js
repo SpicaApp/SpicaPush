@@ -21,7 +21,7 @@ module.exports = async (req, res) => {
         const authors = await getParentAuthors(response.data.id); // Authors of parents
         res.status(200).json(authors.post);
         const mentionedPeople = await getMentionedUsers(authors.post.content, authors.post.author.id); // Mentioned people
-        const subscribedPeople = (parent === null ? [] : await getSubscribedUsers(authors.post.author.id));
+        const subscribedPeople = (parent === null ? await getSubscribedUsers(authors.post.author.id) : []);
 
         for (var i = 0; i < mentionedPeople.length; i++) { // Remove mentioned people from authors (so they don't get a notification twice - they only get one for mentions then)
             const idIndexAuthors = authors.authors.indexOf(mentionedPeople[i]);
