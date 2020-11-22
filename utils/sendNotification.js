@@ -33,8 +33,6 @@ module.exports = async (title, message, payload, uids, type) => {
             if ((type === "reply" && user.repliesEnabled) || (type === "mention" && user.mentionsEnabled) || type == "subscription") {
                 const deviceIds = user.devices.map(device => device.pushtoken);
 
-                console.log(deviceIds);
-
                 const notification = new apn.Notification({
                     badge: 1,
                     sound: "ping.aiff",

@@ -19,6 +19,7 @@ module.exports = async (req, res) => {
         }
     }).then( async (response) => {
         const authors = await getParentAuthors(response.data.id); // Authors of parents
+        res.status(200).json(authors.post);
         const mentionedPeople = await getMentionedUsers(authors.post.content, authors.post.author.id); // Mentioned people
         const subscribedPeople = (parent === null ? [] : await getSubscribedUsers(authors.post.author.id));
 
@@ -37,7 +38,6 @@ module.exports = async (req, res) => {
         await sendNotification(`${authors.post.author.nickname ?? authors.post.author.name} mentioned you`, `${authors.post.content}`, {type: "post", id: authors.post.id}, mentionedPeople, "mention");
         await sendNotification(`${authors.post.author.nickname ?? authors.post.author.name} replied to you`, `${authors.post.content}`, {type: "post", id: authors.post.id}, authors.authors, "reply");
         await sendNotification(`${authors.post.author.nickname ?? authors.post.author.name} just posted`, `${authors.post.content}`, {type: "post", id: authors.post.id}, subscribedPeople, "subscription");
-        return res.status(200).json(authors.post);
     }).catch((err) => {
         if (err.response && err.response.data.hasOwnProperty('err')) {
             return res.status(err.response.status).json(err.response.data);
