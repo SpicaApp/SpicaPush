@@ -35,6 +35,13 @@ module.exports = async (req, res) => {
             }
         }
 
+        for (var i = 0; i < authors.authors.length; i++) {
+            const idIndexSubscribed = subscribedPeople.indexOf(authors.authors[i]);
+            if (idIndexSubscribed > -1) {
+                subscribedPeople.splice(idIndexSubscribed, 1);
+            }
+        }
+
         await sendNotification(`${authors.post.author.nickname ?? authors.post.author.name} mentioned you`, `${authors.post.content}`, {type: "post", id: authors.post.id}, mentionedPeople, "mention");
         await sendNotification(`${authors.post.author.nickname ?? authors.post.author.name} replied to you`, `${authors.post.content}`, {type: "post", id: authors.post.id}, authors.authors, "reply");
         await sendNotification(`${authors.post.author.nickname ?? authors.post.author.name} just posted`, `${authors.post.content}`, {type: "post", id: authors.post.id}, subscribedPeople, "subscription");
