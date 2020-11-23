@@ -39,7 +39,8 @@ module.exports = async (title, message, payload, uids, type) => {
                     title: title,
                     body: message,
                     payload: payload,
-                    topic: "dev.abmgrt.spica"
+                    topic: "dev.abmgrt.spica",
+                    threadId: type
                 });
 
                 const apnResult = await apnProvider.send(notification, deviceIds);
