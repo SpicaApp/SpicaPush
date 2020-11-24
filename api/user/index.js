@@ -12,14 +12,7 @@ module.exports = async (req, res) => {
         include: [db.Device, db.UserPushSubscription]
     });
 
-    if (!fetchedUser) return res.status(200).json({
-        id: authenticatedUser.user,
-        notificationsEnabled: false,
-        repliesEnabled: false,
-        mentionsEnabled: false,
-        devices: [],
-        usersSubscribedTo: []
-     }); // BUG FIX: CHANGE BACK TO 404 { err: "missingResource" } LATER
+    if (!fetchedUser) return res.status(404).json({ err: "missingResource" });
 
     return res.status(200).json(fetchedUser);
 }
