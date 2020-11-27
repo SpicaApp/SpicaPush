@@ -9,13 +9,17 @@ module.exports = async (req, res) => {
         where: {
             id: authenticatedUser.user
         },
-        include: [db.Device]
+        include: [db.Device, db.UserPushSubscription]
     });
 
     if (!user) return res.status(404).json({ err: "missingResource" });
 
     for (var i = 0; i < user.devices.length; i++) {
         await user.devices[i].destroy();
+    }
+
+    for (var i = 0; i < user.userpushsubscriptions.length; i++) {
+        await user.userpushsubscriptions[i].destroy();
     }
 
     await user.destroy();
