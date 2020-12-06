@@ -7,7 +7,7 @@ module.exports = async (req, res) => {
     const authenticatedUser = await auth(req);
     if (!authenticatedUser) return res.status(401).json({ err: "badAuthorization" });
 
-    if (req.body.uid === authenticatedUser.user) return res.status(400).json({ err: "subscribe.self"});
+    if (req.body.uid === authenticatedUser.user) return res.status(400).json({ err: "subscribe.self" });
 
     const existingUser = await db.User.findOne({
         where: {

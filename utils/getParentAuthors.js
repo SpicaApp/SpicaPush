@@ -1,9 +1,11 @@
 const axios = require("axios").default;
 
 module.exports = async (postId) => {
+
     var hightestParent = postId;
     var newPost = null;
-    const authors = [];
+    var authors = [];
+    var parents = [];
 
     while (hightestParent !== null) {
         try {
@@ -12,6 +14,7 @@ module.exports = async (postId) => {
                 newPost = parentResponse.data
             }
             else {
+                parents.push(parentResponse.data);
                 authors.push(parentResponse.data.author.id);
             }
             hightestParent = parentResponse.data.parent;
@@ -37,5 +40,5 @@ module.exports = async (postId) => {
         filteredAuthors.splice(authorIndex, 1);
     }
 
-    return { authors: filteredAuthors, post: newPost };
+    return { authors: filteredAuthors, post: newPost, parents: parents };
 }

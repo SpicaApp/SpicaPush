@@ -20,7 +20,13 @@ module.exports = async (req, res) => {
     }).then( async (response) => {
         const authors = await getParentAuthors(response.data.id); // Authors of parents
         res.status(200).json(authors.post);
-        const mentionedPeople = await getMentionedUsers(authors.post.content, authors.post.author.id); // Mentioned people
+        var mentionedPeople = await getMentionedUsers(authors.post.content, authors.post.author.id); // Mentioned people
+        var mentionedPeopleInParents = [];
+
+        for (var i = 0; i < authors.parents.length; i++) {
+            mentionedPeopleInParents.push(await getMentionedUsers(authors.parents[i].content, authors.parents[i].author.id));
+        }
+
         const subscribedPeople = ((parent === null || parent === undefined || parent === "") ? await getSubscribedUsers(authors.post.author.id) : []);
 
         for (var i = 0; i < mentionedPeople.length; i++) { // Remove mentioned people from authors (so they don't get a notification twice - they only get one for mentions then)
@@ -44,6 +50,7 @@ module.exports = async (req, res) => {
 
         await sendNotification(`${authors.post.author.nickname ?? authors.post.author.name} mentioned you`, `${authors.post.content}`, {type: "post", id: authors.post.id}, mentionedPeople, "mention");
         await sendNotification(`${authors.post.author.nickname ?? authors.post.author.name} replied to you`, `${authors.post.content}`, {type: "post", id: authors.post.id}, authors.authors, "reply");
+        await sendNotification(`${authors.post.author.nickname ?? authors.post.author.name} replied to a post you're mentioned in`, `${authors.post.content}`, { type: "post", id: authors.post.id }, mentionedPeopleInParents, "reply");
         await sendNotification(`${authors.post.author.nickname ?? authors.post.author.name} just posted`, `${authors.post.content}`, {type: "post", id: authors.post.id}, subscribedPeople, "subscription");
     }).catch((err) => {
         if (err.response && err.response.data.hasOwnProperty('err')) {
