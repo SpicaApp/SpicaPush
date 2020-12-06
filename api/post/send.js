@@ -24,7 +24,13 @@ module.exports = async (req, res) => {
         var mentionedPeopleInParents = [];
 
         for (var i = 0; i < authors.parents.length; i++) {
-            mentionedPeopleInParents.push(await getMentionedUsers(authors.parents[i].content, authors.parents[i].author.id));
+            var mentionedusers = await getMentionedUsers(authors.parents[i].content, authors.parents[i].author.id)
+            const authorIndex = mentionedusers.indexOf(authors.post.author.id);
+            if (authorIndex > -1) {
+                mentionedusers.splice(authorIndex, 1);
+            }
+            console.log(mentionedusers);
+            mentionedPeopleInParents = mentionedPeopleInParents.concat(mentionedusers);
         }
 
         const subscribedPeople = ((parent === null || parent === undefined || parent === "") ? await getSubscribedUsers(authors.post.author.id) : []);
@@ -39,12 +45,25 @@ module.exports = async (req, res) => {
             if (idIndexSubscribed > -1) {
                 subscribedPeople.splice(idIndexSubscribed, 1);
             }
+
+            const idIndexMentionedInParents = mentionedPeopleInParents.indexOf(mentionedPeople[i]);
+            console.log(mentionedPeople[i]);
+            console.log(mentionedPeopleInParents);
+            console.log(idIndexMentionedInParents);
+            if (idIndexMentionedInParents > -1) {
+                mentionedPeopleInParents.splice(idIndexMentionedInParents, 1);
+            }
         }
 
         for (var i = 0; i < authors.authors.length; i++) {
             const idIndexSubscribed = subscribedPeople.indexOf(authors.authors[i]);
             if (idIndexSubscribed > -1) {
                 subscribedPeople.splice(idIndexSubscribed, 1);
+            }
+
+            const idIndexMentionedInParents = mentionedPeopleInParents.indexOf(authors.authors[i]);
+            if (idIndexMentionedInParents > -1) {
+                mentionedPeopleInParents.splice(idIndexMentionedInParents, 1);
             }
         }
 
