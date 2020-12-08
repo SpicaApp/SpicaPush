@@ -8,23 +8,23 @@ module.exports = (db) => {
 				primaryKey: true,
 				type: DataTypes.UUID,
 				allowNull: false,
-            },
-            name: {
-                type: DataTypes.STRING,
-                allowNull: false
-            },
-            pushtoken: {
-                type: DataTypes.STRING,
-                allowNull: false
+			},
+			name: {
+				type: DataTypes.STRING,
+				allowNull: false,
+			},
+			pushtoken: {
+				type: DataTypes.STRING,
+				allowNull: false,
 			},
 			type: {
 				type: DataTypes.STRING,
-				allowNull: false
-			}
+				allowNull: false,
+			},
 		},
 		{
 			paranoid: false,
 			updatedAt: false,
 		}
-    );
+	);
 };
