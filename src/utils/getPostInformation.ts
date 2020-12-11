@@ -14,7 +14,7 @@ export const getPostInformation = async (id): Promise<PostInformation> => {
 	while (highestParentId !== null) {
 		try {
 			const _currentResponse = await axios.get(
-				`https://micro.alles.cx/api/posts/${highestParentId}`
+				`${process.env.MICRO_API}/posts/${highestParentId}`
 			);
 			if (highestParentId === id) {
 				requestedPost = _currentResponse.data;

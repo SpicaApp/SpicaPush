@@ -13,7 +13,7 @@ export const getMentions = async (post) => {
 
 			try {
 				const _usernamedata = await axios.get(
-					`https://micro.alles.cx/api/username/${_filteredMention}`
+					`${process.env.MICRO_API}/username/${_filteredMention}`
 				);
 				const user = await getUserById(_usernamedata.data.id);
 				if (user !== undefined) {
@@ -39,7 +39,7 @@ export const getMentions = async (post) => {
 
 const getUserById = async (id) => {
 	try {
-		const userdata = await axios.get(`https://micro.alles.cx/api/users/${id}`);
+		const userdata = await axios.get(`${process.env.MICRO_API}/users/${id}`);
 		return userdata.data;
 	} catch (err) {
 		return;
