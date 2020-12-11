@@ -1,6 +1,6 @@
 const { DataTypes } = require("sequelize");
 
-module.exports = (db) => {
+const pushSubscription = (db) => {
 	db.UserPushSubscription = db.define(
 		"userpushsubscription",
 		{
@@ -20,3 +20,5 @@ module.exports = (db) => {
 		}
 	);
 };
+
+export default pushSubscription;

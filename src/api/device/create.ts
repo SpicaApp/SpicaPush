@@ -1,8 +1,8 @@
-const auth = require("../../utils/auth");
-const db = require("../../db");
-const uuid = require("uuid").v4;
+import { v4 as uuidv4 } from "uuid";
+import db from "../../db";
+import auth from "../../utils/auth";
 
-module.exports = async (req, res) => {
+const createDevice = async (req, res) => {
 	if (
 		typeof req.body.name !== "string" ||
 		typeof req.body.uid !== "string" ||
@@ -10,7 +10,9 @@ module.exports = async (req, res) => {
 		typeof req.body.type !== "string"
 	)
 		return res.status(400).json({ err: "badRequest" });
+
 	const authenticatedUser = await auth(req);
+
 	if (!authenticatedUser || authenticatedUser.user !== req.body.uid)
 		return res.status(401).json({ err: "badAuthorization" });
 
@@ -35,14 +37,16 @@ module.exports = async (req, res) => {
 		});
 	}
 
-	const newDevice = await db.Device.create({
-		id: uuid(),
+	const newDeivce = await db.Device.create({
+		id: uuidv4(),
 		name: req.body.name,
 		pushtoken: req.body.token,
 		type: req.body.type,
 	});
 
-	await existingUser.addDevice(newDevice);
+	await existingUser.addDevice(newDeivce);
 
-	res.status(200).json(newDevice);
+	return res.status(200).json(newDeivce);
 };
+
+export default createDevice;

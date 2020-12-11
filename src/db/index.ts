@@ -1,5 +1,8 @@
 const Sequelize = require("sequelize");
 require("dotenv").config();
+import device from "./Device";
+import pushSubscription from "./UserPushSubscription";
+import user from "./User";
 
 const db = new Sequelize(
 	process.env.DB_NAME,
@@ -15,10 +18,10 @@ const db = new Sequelize(
 	}
 );
 
-module.exports = db;
+export default db;
 
-require("./Device")(db);
-require("./UserPushSubscription")(db);
-require("./User")(db);
+device(db);
+pushSubscription(db);
+user(db);
 
 db.sync();

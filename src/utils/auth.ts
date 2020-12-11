@@ -1,13 +1,15 @@
 const axios = require("axios").default;
 
-module.exports = async (req) => {
+const auth = async (req) => {
 	if (!req.headers.authorization) return;
 	try {
-		const authData = await axios.post("https://sessions.alles.cc/", {
+		const sessionRequest = await axios.post("https://sessions.alles.cc/", {
 			token: req.headers.authorization,
 		});
-		return authData.data;
+		return sessionRequest.data;
 	} catch (err) {
 		return;
 	}
 };
+
+export default auth;

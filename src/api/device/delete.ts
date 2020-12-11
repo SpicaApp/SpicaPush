@@ -1,7 +1,8 @@
-const db = require("../../db");
-const auth = require("../../utils/auth");
+import { v4 as uuidv4 } from "uuid";
+import db from "../../db";
+import auth from "../../utils/auth";
 
-module.exports = async (req, res) => {
+const deleteDevice = async (req, res) => {
 	if (!Array.isArray(req.body.devices))
 		return res.status(400).json({ err: "badRequest" });
 	const authenticatedUser = await auth(req);
@@ -11,20 +12,20 @@ module.exports = async (req, res) => {
 	const failedDevices = [];
 	const deletedDevices = [];
 
-	for (var i = 0; i < req.body.devices.length; i++) {
-		const device = await db.Device.findOne({
+	for (var device of req.body.devices) {
+		const foundDevice = await db.Device.findOne({
 			where: {
-				id: req.body.devices[i],
+				id: device,
 				"$user.id$": authenticatedUser.user,
 			},
 			include: [{ model: db.User }],
 		});
 
-		if (!device) {
-			failedDevices.push(req.body.devices[i]);
+		if (!foundDevice) {
+			failedDevices.push(device);
 		} else {
-			await device.destroy();
-			deletedDevices.push(req.body.devices[i]);
+			await foundDevice.destroy();
+			deletedDevices.push(device);
 		}
 	}
 
@@ -32,3 +33,5 @@ module.exports = async (req, res) => {
 		.status(200)
 		.json({ success: deletedDevices, failed: failedDevices });
 };
+
+export default deleteDevice;

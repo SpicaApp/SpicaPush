@@ -1,8 +1,8 @@
-const auth = require("../../utils/auth");
-const db = require("../../db");
-const uuid = require("uuid").v4;
+import db from "../../db";
+import auth from "../../utils/auth";
+import { v4 as uuidv4 } from "uuid";
 
-module.exports = async (req, res) => {
+const addSubscription = async (req, res) => {
 	if (typeof req.body.uid !== "string")
 		return res.status(400).json({ err: "badRequest" });
 	const authenticatedUser = await auth(req);
@@ -32,7 +32,7 @@ module.exports = async (req, res) => {
 		return res.status(400).json({ err: "alreadySubscribed" });
 
 	const newSubscription = await db.UserPushSubscription.create({
-		id: uuid(),
+		id: uuidv4(),
 		subscribedto: req.body.uid,
 	});
 
@@ -42,3 +42,5 @@ module.exports = async (req, res) => {
 		.status(200)
 		.json({ user: existingUser, subscription: newSubscription });
 };
+
+export default addSubscription;

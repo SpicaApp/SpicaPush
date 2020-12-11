@@ -1,6 +1,6 @@
 const { DataTypes } = require("sequelize");
 
-module.exports = (db) => {
+const device = (db) => {
 	db.Device = db.define(
 		"device",
 		{
@@ -28,3 +28,5 @@ module.exports = (db) => {
 		}
 	);
 };
+
+export default device;

@@ -1,8 +1,7 @@
-const auth = require("../../utils/auth");
-const db = require("../../db");
-const uuid = require("uuid").v4;
+import db from "../../db";
+import auth from "../../utils/auth";
 
-module.exports = async (req, res) => {
+const removeSubscription = async (req, res) => {
 	if (typeof req.body.uid !== "string")
 		return res.status(400).json({ err: "badRequest" });
 	const authenticatedUser = await auth(req);
@@ -22,3 +21,5 @@ module.exports = async (req, res) => {
 
 	return res.status(200).json({});
 };
+
+export default removeSubscription;

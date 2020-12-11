@@ -1,6 +1,6 @@
 const { DataTypes } = require("sequelize");
 
-module.exports = (db) => {
+const user = (db) => {
 	db.User = db.define(
 		"user",
 		{
@@ -35,3 +35,5 @@ module.exports = (db) => {
 	db.User.hasMany(db.UserPushSubscription);
 	db.UserPushSubscription.belongsTo(db.User);
 };
+
+export default user;

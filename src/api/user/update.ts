@@ -1,7 +1,7 @@
-const db = require("../../db");
-const auth = require("../../utils/auth");
+import db from "../../db";
+import auth from "../../utils/auth";
 
-module.exports = async (req, res) => {
+const updateUser = async (req, res) => {
 	const authenticatedUser = await auth(req);
 	if (!authenticatedUser)
 		return res.status(401).json({ err: "badAuthorization" });
@@ -29,3 +29,5 @@ module.exports = async (req, res) => {
 
 	return res.status(200).json(user);
 };
+
+export default updateUser;
