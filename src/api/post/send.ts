@@ -72,6 +72,7 @@ const send = async (req: express.Request, res: express.Response) => {
 			if (err.response && err.response.data.hasOwnProperty("err")) {
 				return res.status(err.response.status).json(err.response.data);
 			} else {
+				console.log(err);
 				return res.status(500).json({ err: "internalError" });
 			}
 		});
