@@ -28,25 +28,30 @@ const createDevice = async (req, res) => {
 		},
 	});
 
-	if (existingDevice)
-		return res.status(400).json({ err: "deviceTokenAlreadyExists" });
+	if (existingDevice) {
+		existingDevice.type = req.body.type;
+		existingDevice.name = req.body.name;
+		await existingDevice.save();
+		return res.status(200).json(existingDevice);
+	} else {
+		if (!existingUser) {
+			existingUser = await db.User.create({
+				id: req.body.uid,
+			});
+		}
 
-	if (!existingUser) {
-		existingUser = await db.User.create({
-			id: req.body.uid,
+		const newDevice = await db.Device.create({
+			id: uuidv4(),
+			name: req.body.name,
+			pushtoken: req.body.token,
+			type: req.body.type,
 		});
+
+		await existingUser.addDevice(newDevice);
+
+		return res.status(200).json(newDevice);
 	}
-
-	const newDeivce = await db.Device.create({
-		id: uuidv4(),
-		name: req.body.name,
-		pushtoken: req.body.token,
-		type: req.body.type,
-	});
-
-	await existingUser.addDevice(newDeivce);
-
-	return res.status(200).json(newDeivce);
+	//return res.status(400).json({ err: "deviceTokenAlreadyExists" });
 };
 
 export default createDevice;
