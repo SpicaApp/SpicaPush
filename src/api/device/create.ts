@@ -13,7 +13,7 @@ const createDevice = async (req, res) => {
 
 	const authenticatedUser = await auth(req);
 
-	if (!authenticatedUser || authenticatedUser.user !== req.body.uid)
+	if (!authenticatedUser || authenticatedUser.id !== req.body.uid)
 		return res.status(401).json({ err: "badAuthorization" });
 
 	var existingUser = await db.User.findOne({

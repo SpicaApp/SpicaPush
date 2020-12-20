@@ -14,7 +14,7 @@ const updateUser = async (req, res) => {
 
 	const user = await db.User.findOne({
 		where: {
-			id: authenticatedUser.user,
+			id: authenticatedUser.id,
 		},
 		include: [db.Device],
 	});

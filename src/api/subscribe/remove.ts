@@ -11,7 +11,7 @@ const removeSubscription = async (req, res) => {
 	const subscription = await db.UserPushSubscription.findOne({
 		where: {
 			subscribedto: req.body.uid,
-			userId: authenticatedUser.user,
+			userId: authenticatedUser.id,
 		},
 	});
 

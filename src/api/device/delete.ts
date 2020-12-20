@@ -16,7 +16,7 @@ const deleteDevice = async (req, res) => {
 		const foundDevice = await db.Device.findOne({
 			where: {
 				id: device,
-				"$user.id$": authenticatedUser.user,
+				"$user.id$": authenticatedUser.id,
 			},
 			include: [{ model: db.User }],
 		});

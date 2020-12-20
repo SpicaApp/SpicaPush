@@ -9,12 +9,12 @@ const addSubscription = async (req, res) => {
 	if (!authenticatedUser)
 		return res.status(401).json({ err: "badAuthorization" });
 
-	if (req.body.uid === authenticatedUser.user)
+	if (req.body.uid === authenticatedUser.id)
 		return res.status(400).json({ err: "subscribe.self" });
 
 	const existingUser = await db.User.findOne({
 		where: {
-			id: authenticatedUser.user,
+			id: authenticatedUser.id,
 		},
 		include: [db.UserPushSubscription],
 	});
@@ -24,7 +24,7 @@ const addSubscription = async (req, res) => {
 	const existingSubscription = await db.UserPushSubscription.findOne({
 		where: {
 			subscribedto: req.body.uid,
-			userId: authenticatedUser.user,
+			userId: authenticatedUser.id,
 		},
 	});
 

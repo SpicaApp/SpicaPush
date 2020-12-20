@@ -8,7 +8,7 @@ const subscriptionIndex = async (req, res) => {
 
 	var existingUser = await db.User.findOne({
 		where: {
-			id: authenticatedUser.user,
+			id: authenticatedUser.id,
 		},
 		include: [db.UserPushSubscription],
 	});

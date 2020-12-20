@@ -8,7 +8,7 @@ const userIndex = async (req, res) => {
 
 	const fetchedUser = await db.User.findOne({
 		where: {
-			id: authenticatedUser.user,
+			id: authenticatedUser.id,
 		},
 		include: [db.Device, db.UserPushSubscription],
 	});
