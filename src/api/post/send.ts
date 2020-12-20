@@ -33,7 +33,7 @@ const send = async (req: express.Request, res: express.Response) => {
 					post.post.author.nickname ?? post.post.author.name
 				} mentioned you`,
 				message: `${post.post.content}`,
-				payload: { type: "post", id: post.post.id },
+				payload: { type: "post", id: post.post.id, click_action: "FLUTTER_NOTIFICATION_CLICK" },
 				uids: post.directMentionedUsers,
 				type: NotificationType.MENTION,
 			});
@@ -43,7 +43,7 @@ const send = async (req: express.Request, res: express.Response) => {
 					post.post.author.nickname ?? post.post.author.name
 				} replied to you`,
 				message: `${post.post.content}`,
-				payload: { type: "post", id: post.post.id },
+				payload: { type: "post", id: post.post.id, click_action: "FLUTTER_NOTIFICATION_CLICK" },
 				uids: post.authors,
 				type: NotificationType.REPLY,
 			});
@@ -53,7 +53,7 @@ const send = async (req: express.Request, res: express.Response) => {
 					post.post.author.nickname ?? post.post.author.name
 				} replied to a post you're mentioned in`,
 				message: `${post.post.content}`,
-				payload: { type: "post", id: post.post.id },
+				payload: { type: "post", id: post.post.id, click_action: "FLUTTER_NOTIFICATION_CLICK" },
 				uids: post.parentMentionedUsers,
 				type: NotificationType.REPLY,
 			});
@@ -63,7 +63,7 @@ const send = async (req: express.Request, res: express.Response) => {
 					post.post.author.nickname ?? post.post.author.name
 				} just posted something`,
 				message: `${post.post.content}`,
-				payload: { type: "post", id: post.post.id },
+				payload: { type: "post", id: post.post.id, click_action: "FLUTTER_NOTIFICATION_CLICK" },
 				uids: post.subscribedUsers,
 				type: NotificationType.SUBSCRIPTION,
 			});

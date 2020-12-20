@@ -1,5 +1,6 @@
 import db from "../db";
 const apn = require("apn");
+const admin = require("firebase-admin");
 
 var apnProvider;
 
@@ -26,7 +27,16 @@ export const sendNotification = async (notification: Notification) => {
 		});
 
 		if (user && isAllowedToSendNotification(notification, user)) {
-			const userDeviceIds = user.devices.map((device) => device.pushtoken);
+			const iosDevices = user.devices.filter((dev) => dev.os == "ios");
+			const androidDevices = user.devices.filter((dev) => dev.os == "android");
+
+			const iosDeviceIds: String[] = iosDevices.map(
+				(device) => device.pushtoken
+			);
+			const androidDeviceIds: String[] = androidDevices.map(
+				(device) => device.pushtoken
+			);
+
 			const apnnotification = new apn.Notification({
 				badge: 1,
 				sound: "ping.aiff",
@@ -37,9 +47,20 @@ export const sendNotification = async (notification: Notification) => {
 				threadId: notification.type.toString(),
 			});
 
-			const apnResult = await apnProvider.send(apnnotification, userDeviceIds);
+			const apnResult = await apnProvider.send(apnnotification, iosDeviceIds);
+
+			var fcmMessage = {
+				notification: {
+					title: notification.title,
+					body: notification.message,
+				},
+				data: notification.payload,
+				tokens: androidDeviceIds,
+			};
+			const firebaseResult = await admin.messaging().sendMulticast(fcmMessage);
 
 			results.push(apnResult);
+			results.push(firebaseResult);
 		}
 	}
 

@@ -1,7 +1,3 @@
-require("dotenv").config();
-import * as express from "express";
-const app = express();
-
 import db from "./db";
 import send from "./api/post/send";
 import createDevice from "./api/device/create";
@@ -13,6 +9,18 @@ import deleteUser from "./api/user/delete";
 import subscriptionIndex from "./api/subscribe";
 import addSubscription from "./api/subscribe/add";
 import removeSubscription from "./api/subscribe/remove";
+
+require("dotenv").config();
+import * as express from "express";
+const app = express();
+var admin = require("firebase-admin");
+
+if (process.env.FIREBASE_JSON && process.env.FIREBASE_DB) {
+	admin.initializeApp({
+		credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_JSON)),
+		databaseURL: process.env.FIREBASE_DB,
+	});
+}
 
 app.use(require("body-parser").json({ limit: "50mb" }));
 app.use((err, req, res, next) => {
