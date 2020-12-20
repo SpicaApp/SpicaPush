@@ -21,6 +21,10 @@ const device = (db) => {
 				type: DataTypes.STRING,
 				allowNull: false,
 			},
+			os: {
+				type: DataTypes.ENUM("ios", "android"),
+				allowNull: false,
+			},
 		},
 		{
 			paranoid: false,

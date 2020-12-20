@@ -25,6 +25,7 @@ const createDevice = async (req, res) => {
 	const existingDevice = await db.Device.findOne({
 		where: {
 			pushtoken: req.body.token,
+			os: req.body.os ?? "ios",
 		},
 	});
 
@@ -45,6 +46,7 @@ const createDevice = async (req, res) => {
 			name: req.body.name,
 			pushtoken: req.body.token,
 			type: req.body.type,
+			os: req.body.os ?? "ios",
 		});
 
 		await existingUser.addDevice(newDevice);
