@@ -10,6 +10,7 @@ const auth = async (req) => {
 		});
 		return sessionRequest.data;
 	} catch (err) {
+		console.log(err);
 		return;
 	}
 };
